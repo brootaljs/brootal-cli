@@ -1,4 +1,4 @@
-# Brootal CLI [![NPM version][npm-image]][npm-url]
+# Brootal CLI
 > 
 
 ## Installation
