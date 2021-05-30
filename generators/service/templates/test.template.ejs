@@ -1,0 +1,14 @@
+const _ = require('lodash');
+const mocha = require('mocha');
+const expect = require('chai').expect;
+
+describe('<%= name %>', () => {
+    var session;
+    before(async () => {
+        await seeder.clearAll();
+        await seeder.seedAll();
+    });
+    // it('< test name >', async () => {
+    //    add test logic here
+    // });
+});

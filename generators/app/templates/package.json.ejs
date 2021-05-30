@@ -1,0 +1,49 @@
+{
+  "name": "<%= name %>",
+  "version": "0.1.0",
+  "description": "<%= description %>",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "NODE_ENV=test mocha",
+    "start": "./node_modules/.bin/babel-node server/server.js",
+    "start-prod": "pm2-docker start npm start -i '-1'",
+    "dev": "DEBUG=Engine:* nodemon --exec ./node_modules/.bin/babel-node server/server.js"
+  },
+  "gitHooks": {
+    "pre-commit": "sh patch_version.sh",
+    "post-merge": "sh patch_version_with_commit.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/register": "^7.12.1",
+    "@brootal/core": "^0.11.0",
+    "@brootal/mongo-connector": "^0.1.0",
+    "core-js": "^3.7.0",
+    "debug": "^4.3.1",
+    "dotenv-flow": "^3.2.0",
+    "express": "^4.17.1",
+    "form-data": "^3.0.0",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "mongoose": "^5.10.15",
+    "mongoose-autopopulate": "^0.12.3",
+    "node-fetch": "^2.6.1",
+    "pm2": "^4.5.1",
+    "sinon": "^9.2.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "babel-plugin-root-import": "^6.4.1",
+    "chai": "^4.2.0",
+    "eslint-import-resolver-babel-plugin-root-import": "^1.1.1",
+    "eslint-plugin-import": "^2.18.2",
+    "mocha": "^8.2.1",
+    "mongodb-memory-server": "^6.9.3",
+    "nodemon": "^2.0.6",
+    "yorkie": "^2.0.0"
+  }
+}

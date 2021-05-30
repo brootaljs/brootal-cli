@@ -1,0 +1,13 @@
+push-master:
+  only:
+    - master
+  image: docker:latest
+  stage: deploy
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - "PACKAGE_VERSION=$(grep -m 1 \"\\\"version\\\"\" package.json | sed -r 's/^ *//;s/.*: *\"//;s/\",?//')"
+    - echo "$CI_REGISTRY_IMAGE:$PACKAGE_VERSION"
+    - docker build -f Dockerfile.prod --pull -t "$CI_REGISTRY_IMAGE:$PACKAGE_VERSION" .
+    - docker tag "$CI_REGISTRY_IMAGE:$PACKAGE_VERSION" "$CI_REGISTRY_IMAGE:latest"
+    - docker push "$CI_REGISTRY_IMAGE:$PACKAGE_VERSION"
+    - docker push "$CI_REGISTRY_IMAGE:latest"

@@ -1,0 +1,49 @@
+import { request, getOptions, baseUrl } from '~/services/apiHelper';
+
+export default {<% remoteNames.forEach(remoteName => { %>
+  async <%= remoteName %>(<% if (!remotes[remoteName].static) { %>__id, <%}%><% remotes[remoteName].accepts.forEach(accept => { %><%=accept.arg%>, <% }) %>__config) {
+    const config = __config;
+    <% if (!remotes[remoteName].static || remotes[remoteName].accepts.filter(el => el.http.source === 'params').length) { %>let<% } else { %>const<% } %> path = '<%= `/${name}${remotes[remoteName].static?'':'/:id'}${remotes[remoteName].remote}` %>';
+    let formData;
+    const body = {};
+    const queryParameters = {};
+    const form = {};<% if (!remotes[remoteName].static) { %>
+    path = path.replace(/:id\//, `${__id}/`);
+    path = path.replace(/:id$/, `${__id}`);
+    if (__id === undefined) {
+      return Promise.reject(new Error('Missing required  parameter: id'))
+    }<% } %><% for( let i = 0; i < remotes[remoteName].accepts.length; i++ ) { %>
+    <% if (remotes[remoteName].accepts[i].http.source === 'params') { %>
+    path = path.replace(/:<%= remotes[remoteName].accepts[i].arg %>\//, `${<%= remotes[remoteName].accepts[i].arg %>}/`)
+    path = path.replace(/:<%= remotes[remoteName].accepts[i].arg %>$/, `${<%= remotes[remoteName].accepts[i].arg %>}`)
+    if (<%= remotes[remoteName].accepts[i].arg %> === undefined) {
+      return Promise.reject(new Error('Missing required  parameter: <%= remotes[remoteName].accepts[i].arg %>'))
+    }<% } else if (remotes[remoteName].accepts[i].http.source === 'body') { %>
+    if (<%= remotes[remoteName].accepts[i].arg %> !== undefined) {
+      body['<%= remotes[remoteName].accepts[i].arg %>'] = <%= remotes[remoteName].accepts[i].arg %>
+    }<% } else if (remotes[remoteName].accepts[i].http.source === 'query') { %>
+    if (<%= remotes[remoteName].accepts[i].arg %> !== undefined) {
+      queryParameters['<%= remotes[remoteName].accepts[i].arg %>'] = <%= remotes[remoteName].accepts[i].arg %>
+    }<% } else if (remotes[remoteName].accepts[i].http.source === 'file') { %>
+      if (<%= remotes[remoteName].accepts[i].arg %> !== undefined) {
+        if (!formData) {
+          formData = new FormData();
+        }
+        formData.append('<%= remotes[remoteName].accepts[i].arg %>', <%= remotes[remoteName].accepts[i].arg %>);
+    }<% } %><% } %>
+
+    if (formData) {
+      config.headers = config.headers ? {
+        ...config.headers,
+        'Content-Type': 'multipart/form-data'
+      } : { 'Content-Type': 'multipart/form-data' }
+      
+      Object.keys(body).forEach((key) => {
+        formData.append(key, body[key]);
+      });
+      body = formData;
+    }
+    
+    return request('<%= remotes[remoteName].method %>', `${baseUrl}${getOptions('<%= instanceName %>').basePath}${path}`, body, queryParameters, form, config);
+  },<% }) %>
+};

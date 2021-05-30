@@ -1,0 +1,8 @@
+.gitlab-ci.yml
+patch_version.sh
+patch_version_with_commit.sh
+demo
+.eslintignore
+.editorconfig
+.travis.yml
+__tests__

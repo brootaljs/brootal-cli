@@ -1,0 +1,15 @@
+{
+    "presets": [["@babel/preset-env", {"exclude": ["transform-regenerator"]}]],
+    "plugins": [
+        [
+          "babel-plugin-root-import",
+          {
+            "rootPathSuffix": "./",
+            "rootPathPrefix": "~/"
+          }
+        ],
+        [
+            "@babel/plugin-proposal-class-properties"
+        ]
+      ]
+}

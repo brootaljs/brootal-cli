@@ -1,0 +1,16 @@
+import app from '~/server/app';
+import seeder from "~/seeder";
+import brootal from '@brootal/core';
+
+const timeout = function(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+export async function mochaGlobalSetup() {
+    console.log(app);
+    await brootal.init(app, {isTest: true});
+    global.seeder = seeder();
+}
+
+global.app = app;
+global.timeout = timeout;

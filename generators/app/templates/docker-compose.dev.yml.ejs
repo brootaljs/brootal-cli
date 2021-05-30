@@ -1,0 +1,28 @@
+version: '3.3'
+services:
+  <%= name %>:
+    container_name: lego_<%= name %>
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - '.:/usr/src/app'
+    ports:
+      - '<%= port %>:<%= port %>'
+    command: ["npm", "run", "dev"]
+    environment:
+      - REDIS_ADDR=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=ItIsP4ssw0rD4orRed1S
+      - DEBUG="*"
+      - NODE_ENV=${NODE_ENV}
+      - MONGODB_APPLICATION_HOST=<%= mongoHost %>
+      - MONGODB_APPLICATION_DATABASE=<%= mongoDB %>
+      - MONGODB_APPLICATION_USER=<%= mongoUser %>
+      - MONGODB_APPLICATION_PASS=<%= mongoPassword %>
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:<%= port %>"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: always

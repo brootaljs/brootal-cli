@@ -1,0 +1,14 @@
+<% if (isExtendByService) { %>import { Service } from '@brootal/mongo-connector';
+<% } %><% if (hasModel) { %>import { model, schema, relations } from './<%= name %>.model';<% } %>
+
+class <%= name %> <% if (isExtendByService) { %>extends Service<% } %>{
+    constructor(item) {
+        super(item);
+    }
+    <% if (hasModel) { %>
+    static schema = schema;
+    static model = model;
+    static relations = relations<% } %>
+}
+
+export default <%= name %>;

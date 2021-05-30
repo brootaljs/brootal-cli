@@ -1,0 +1,16 @@
+const _ = require('lodash');
+const mocha = require('mocha');
+const expect = require('chai').expect;
+
+//do not forget to remove
+describe.only('<test scope name>', () => {
+    var session;
+    before(async () => {
+        await seeder.clearAll();
+        await seeder.seedAll();
+    });
+    it('< test name >', async () => {
+        // session = await app.models.Session.createSession({ userId: user.id, uiChannel: 'mocha' });
+        // expect(session).to.be.a("object");
+    });
+});

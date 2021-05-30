@@ -1,0 +1,12 @@
+FROM node:14.15.1
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+# ENV PATH /usr/src/app/node_modules/.bin:$PATH
+
+# COPY package.json /usr/src/app/package.json
+# ENV NODE_DTRACE_PROVIDER_REQUIRE hard
+
+# RUN	npm install
+RUN npm i nodemon -g

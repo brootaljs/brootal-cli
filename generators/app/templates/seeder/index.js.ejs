@@ -1,0 +1,65 @@
+import path from 'path';
+import fs from 'fs';
+import _ from 'lodash';
+
+function filterSeedsByNames(seeds, names) {
+    if (typeof names === 'string') {
+        return [_.find(seeds, {name: names})]
+    } else {
+        return _.filter(seeds, (seed) => names.indexOf(seed.name) >=0 );
+    }
+}
+
+// seeder.connect(process.env.MONGODB_URL, function() {
+//     seeder.loadModels(seeds.map((seed) => seed.model));
+// });
+
+export default () => {
+
+    const directoryPath = path.join(__dirname, './seeds');
+    const seeds = fs.readdirSync(directoryPath).map((seedFileName) => {
+        let seed = require(`${directoryPath}/${seedFileName}`);
+        if (seed.default) seed = seed.default;
+        return {
+            name: seed.model,
+            seed: seed.documents,
+            model: require(`~/services/${seed.model}/${seed.model}.model.js`).model
+        };
+    });
+
+    return {
+        async seedAll() {
+            return Promise.all(seeds.map(async (seed) => {
+                return seed.model.create(seed.seed);
+            }))
+        },
+        async clearAll() {
+            return Promise.all(seeds.map(async (seed) => {
+                return seed.model.deleteMany();
+            }))
+        },
+
+        async seed(names) {
+            if (typeof names === 'string') {
+                let seedData = _.find(seeds, (seed) => seed.name === names);
+                return seedData.model.create(seedData.seed);
+            } else {
+                let seedData = _.filter(seeds, (seed) => names.indexOf(seed.name) >= 0);
+                return Promise.all(seedData.map(async (seed) => {
+                    return seed.model.create(seed.seed);
+                }))
+            }
+        },
+        async clear(names) {
+            if (typeof names === 'string') {
+                let seedData = _.find(seeds, (seed) => seed.name === names);
+                return seedData.model.deleteMany();
+            } else {
+                let seedData = _.filter(seeds, (seed) => names.indexOf(seed.name) >= 0);
+                return Promise.all(seedData.map(async (seed) => {
+                    return seed.model.deleteMany();
+                }))
+            }
+        }
+    }
+}

@@ -1,0 +1,91 @@
+import { findIndex } from 'lodash';
+// initial state
+const state = {
+  elements: [],
+  count: null,
+  name: '<%= name %>',
+  filter: {},
+  structure: [
+    { key: '_id', type: 'string' }
+  ],
+  headers: [
+    { text: 'Id', value: '_id', searchable: true, sortable: true, align: 'left' },
+  ]
+};
+
+// getters
+const getters = {};
+
+// actions
+const actions = {
+  async fetch({ commit, dispatch }, filter = {}) {
+    const elements = await this.$api<%= instanceName?`.${instanceName}`:'' %>.<%= name %>.find(filter);
+    commit('SET_ELEMENTS', elements);
+
+    dispatch('count', { where: filter.where });
+  },
+  async count({ commit }, filter = {}) {
+    const { count } = await this.$api<%= instanceName?`.${instanceName}`:'' %>.<%= name %>.count(filter);
+    commit('SET_COUNT', count);
+  },
+  async createElement({ commit }, data) {
+    const newItem = await this.$api<%= instanceName?`.${instanceName}`:'' %>.<%= name %>.create(data);
+    commit('SET_ELEMENT', newItem)
+  },
+  async editElement({ commit }, data) {
+    const editedItem = await this.$api<%= instanceName?`.${instanceName}`:'' %>.<%= name %>.findByIdAndUpdate(data._id, data);
+    commit('EDIT_ELEMENT', editedItem)
+  },
+  async deleteElement({ commit }, data) {
+    await this.$api<%= instanceName?`.${instanceName}`:'' %>.<%= name %>.findByIdAndDelete(data._id);
+    commit('DELETE_ELEMENT', data._id)
+  },
+  clearElements({ commit }) {
+    commit('SET_ELEMENTS', []);
+  },
+  setFilter({ commit }, filter) {
+    commit('SET_FILTER', filter);
+  }
+};
+
+// mutations
+const mutations = {
+  SET_ELEMENTS(state, elements) {
+    state.elements = (elements && elements.data) ? elements.data : elements;
+  },
+  SET_ELEMENT(state, element) {
+    const index = findIndex(state.elements, { _id: element._id });
+    if (index < 0) {
+      state.elements.push(element);
+    } else {
+      state.elements[index] = element;
+    }
+  },
+  EDIT_ELEMENT(state, element) {
+    const index = findIndex(state.elements, { _id: element._id });
+    if (index >= 0) {
+      state.elements[index] = element;
+    }
+  },
+  ADD_ELEMENT(state, element) {
+    state.elements.push(element);
+  },
+  DELETE_ELEMENT(state, _id) {
+    const index = findIndex(state.elements, { _id });
+    if (index > 0) state.element.splice(index, 1);
+  },
+  SET_COUNT(state, count) {
+    state.count = count;
+  },
+  SET_FILTER(state, filter) {
+    state.filter = filter;
+  }
+};
+
+export default {
+  namespaced: true,
+  state,
+  getters,
+  actions,
+  mutations,
+};

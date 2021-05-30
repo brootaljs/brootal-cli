@@ -1,0 +1,23 @@
+import app from '~/server/app';
+import { Schema } from 'mongoose';
+
+const schema = new Schema({<% schema.forEach(function(field){ %>
+    <%= field.name %>: <% if (!field.default) { %><%= field.type %><% } else { %>{ type: <%= field.type %>, default: <%= field.default %>}<% } %>,<% }); %>
+}, { collection: '<%= name %>'});
+
+const relations = {};
+
+let model;
+try {
+    model = app.datasources.<%= datasource %>.model('<%= name %>');
+    // console.log('datasource model exists');
+} catch (err) {
+    model = app.datasources.<%= datasource %>.model('<%= name %>', schema);
+    // console.log('datasource model is created. Throws OverwriteModelError: Cannot overwrite `<%= name %>` model once compiled.');
+}
+
+export {
+    model,
+    schema,
+    relations
+};

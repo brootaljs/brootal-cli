@@ -1,0 +1,5 @@
+<% if (isExtendByService) { %>import { Remote } from '@brootal/core';
+
+<% } %>export default {
+    <% if (isExtendByService) { %>...Remote<% } %>
+}

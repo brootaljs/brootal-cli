@@ -1,0 +1,33 @@
+import express from 'express';
+import brootal from '@brootal/core';
+
+require('dotenv-flow').config();
+
+const port = process.env.PORT || <%= port %>;
+let startUpDate;
+
+const app = express();
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send(JSON.stringify({
+    port,
+    startUpDate
+  }));
+})
+
+const boot = async () => {
+    await brootal.init(app);
+
+    app.listen(port, () => {
+      startUpDate = new Date();
+      console.log(`Example app listening at http://localhost:${port}`)
+    })
+}
+
+// app.services.Dispatcher.start()
+export {
+  boot
+}
+
+export default app;
