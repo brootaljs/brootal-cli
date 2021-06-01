@@ -1,12 +1,12 @@
-# Brootal CLI
+# Brootal Bro here to help you with some brootal code!
 > 
 
 ## Installation
 
-First, install Brootal CLI using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install Brootal Bro using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
 
 ```bash
-npm install -g brootal
+npm install -g bro
 ```
 
 Then generate your new project:
