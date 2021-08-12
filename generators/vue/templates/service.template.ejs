@@ -5,7 +5,7 @@ export default {<% remoteNames.forEach(remoteName => { %>
     const config = __config;
     <% if (!remotes[remoteName].static || remotes[remoteName].accepts.filter(el => el.http.source === 'params').length) { %>let<% } else { %>const<% } %> path = '<%= `/${name}${remotes[remoteName].static?'':'/:id'}${remotes[remoteName].remote}` %>';
     let formData;
-    const body = {};
+    let body = {};
     const queryParameters = {};
     const form = {};<% if (!remotes[remoteName].static) { %>
     path = path.replace(/:id\//, `${__id}/`);
