@@ -1,7 +1,7 @@
 import { request, getOptions, baseUrl } from '~/services/apiHelper';
 
 export default {<% remoteNames.forEach(remoteName => { %>
-  async <%= remoteName %>(<% if (!remotes[remoteName].static) { %>__id, <%}%><% remotes[remoteName].accepts.forEach(accept => { %><%=accept.arg%>, <% }) %>__config) {
+  async <%= remoteName %>(<% if (!remotes[remoteName].static) { %>__id, <%}%><% remotes[remoteName].accepts.forEach(accept => { %><%=accept.arg%>, <% }) %>__config = {}) {
     const config = __config;
     <% if (!remotes[remoteName].static || remotes[remoteName].accepts.filter(el => el.http.source === 'params').length) { %>let<% } else { %>const<% } %> path = '<%= `/${name}${remotes[remoteName].static?'':'/:id'}${remotes[remoteName].remote}` %>';
     let formData;
