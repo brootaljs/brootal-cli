@@ -1,5 +1,6 @@
 import express from 'express';
 import brootal from '@brootal/core';
+import qs from 'qs';
 
 require('dotenv-flow').config();
 
@@ -7,6 +8,11 @@ const port = process.env.PORT || <%= port %>;
 let startUpDate;
 
 const app = express();
+
+app.set('query parser', function(str) {
+  return qs.parse(str, { arrayLimit: Infinity, depth: 50 });
+});
+
 app.use(express.json());
 
 app.get("/", (req, res) => {
